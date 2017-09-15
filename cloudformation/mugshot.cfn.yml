@@ -1,0 +1,141 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: Mug Shot
+
+Parameters:
+  SubmissionMugShotBucketName:
+    Type: String
+    Description: The name for the bucket hosting submitted mug shot
+    Default: mug-shot-submission-s3
+
+  MugShotBucketName:
+    Type: String
+    Description: The name for the bucket hosting validated mug shot
+    Default: mug-shot-s3
+
+Resources:
+  SubmissionMugShotBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: mug-shot-submission-s3
+      # NotificationConfiguration:
+      #   LambdaConfigurations:
+      #     - Event: "s3:ObjectCreated:*"
+      #       Function:
+      #         Fn::Sub: ${TestFunction1.Arn}
+
+  MugShotBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref MugShotBucketName
+
+  Test1Function:
+      Type: AWS::Lambda::Function
+      Properties:
+        Code:
+          ZipFile:
+            Fn::Join: ["\n", ["import json",
+                          "def handler(event, context):",
+                          "    print \"Hello World1\"",
+                          "    lambdaRetVal = {\"Hello\":\"World\"}",
+                          "    return json.dumps(lambdaRetVal)"]
+                     ]
+        Handler: index.handler
+        Role: !GetAtt LambdaExecutionRole.Arn
+        Runtime: python2.7
+
+  Test2Function:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile:
+          Fn::Join: ["\n", ["import json",
+                        "def handler(event, context):",
+                        "    print \"Hello World2\"",
+                        "    lambdaRetVal = {\"Hello\":\"World\"}",
+                        "    return json.dumps(lambdaRetVal)"]
+                   ]
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: python2.7
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+        Version: '2012-10-17'
+      Path: "/"
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+              - "logs:CreateLogStream"
+              - "logs:PutLogEvents"
+            Effect: Allow
+            Resource: "arn:aws:logs:*:*:*"
+          Version: '2012-10-17'
+        PolicyName: root
+
+  MyStateMachine:
+    Type: "AWS::StepFunctions::StateMachine"
+    Properties:
+      DefinitionString:
+        !Sub
+          - |-
+            {
+              "Comment": "A Hello World AWL example using an AWS Lambda function",
+              "StartAt": "HelloWorld1",
+              "States": {
+                "HelloWorld1": {
+                  "Type": "Task",
+                  "Resource": "${lambda1Arn}",
+                  "Next": "HelloWorld2"
+                },
+                "HelloWorld2": {
+                  "Type": "Task",
+                  "Resource": "${lambda2Arn}",
+                  "End": true
+                }
+              }
+            }
+          - {
+              lambda1Arn: !GetAtt [ Test1Function, Arn ],
+              lambda2Arn: !GetAtt [ Test2Function, Arn ]
+            }
+      RoleArn: !GetAtt [ SubmissionStateMachineRole, Arn ]
+
+  SubmissionStateMachineRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: !Sub states.${AWS::Region}.amazonaws.com
+            Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: StatesExecutionPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: "*"
+
+Outputs:
+  SubmissionMugShotBucket:
+   Value: !GetAtt [SubmissionMugShotBucket, Arn]
+
+  MugShotBucket:
+    Value: !GetAtt [MugShotBucket, Arn]
