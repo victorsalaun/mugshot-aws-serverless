@@ -11,6 +11,7 @@
 
 from __future__ import print_function  # Python 2/3 compatibility
 import logging
+import uuid
 
 # Constants
 
@@ -43,6 +44,7 @@ def handler(event, context):
     logger.info("Received event for file: " + file_name)
     accept_file_name(file_name)
     s3 = {
+        "id": str(uuid.uuid4()),
         "bucket_name": str(record['s3']['bucket']['name']),
         "file_name": file_name
     }

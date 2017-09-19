@@ -30,9 +30,10 @@ logger.setLevel(logging.DEBUG)
 
 def handler(event, context):
     logger.debug("Received event: " + str(event))
+    file_name_parts = event['file_name'].rsplit('.', 1)
     client = boto3.client('s3')
     client.copy_object(CopySource=event['bucket_name'] + '/' + event['file_name'],
-                       Bucket=os.environ.get("MUG_SHOT_BUCKET"), Key=event['file_name'])
+                       Bucket=os.environ.get("MUG_SHOT_BUCKET"), Key=event['id'] + '.' + file_name_parts[1])
     return event
 
 # Tests
