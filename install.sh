@@ -4,12 +4,22 @@ TEMPLATE_FILE_NAME='mugshot.cfn.yml'
 PACKAGE_FILE_NAME='mugshot-xfm.cfn.yml'
 STACK_NAME='MugShot'
 BUCKET_NAME_TEMPLATE="mug-shot-template-s3"
+BUCKET_CODE="mug-shot-code-s3"
 
 # Check if the aws cli is installed
 if ! command -v aws > /dev/null; then
     echo "aws cli was not found. Please install before running this script."
     exit 1
 fi
+
+# aws s3 create-bucket --bucket ${BUCKET_CODE}
+
+# zip
+#zip ./lambda/src/deleteSubmittedFile/deleteSubmittedFile.zip ./lambda/src/deleteSubmittedFile/deleteSubmittedFile.py
+#zip ./lambda/src/extractAndValidateSubmittedFile/extractAndValidateSubmittedFile.zip ./lambda/src/extractAndValidateSubmittedFile/extractAndValidateSubmittedFile.py
+aws s3 cp ./lambda/src/deleteSubmittedFile/deleteSubmittedFile.zip  s3://${BUCKET_CODE}/deleteSubmittedFile.zip
+aws s3 cp ./lambda/src/extractAndValidateSubmittedFile/extractAndValidateSubmittedFile.zip  s3://${BUCKET_CODE}/extractAndValidateSubmittedFile.zip
+aws s3 cp ./lambda/src/launchSubmissionStateMachine/launchSubmissionStateMachine.zip  s3://${BUCKET_CODE}/launchSubmissionStateMachine.zip
 
 # Try to create CloudFormation package
 if aws cloudformation package --template-file cloudformation/${TEMPLATE_FILE_NAME} --output-template-file ${PACKAGE_FILE_NAME} --s3-bucket ${BUCKET_NAME_TEMPLATE}; then

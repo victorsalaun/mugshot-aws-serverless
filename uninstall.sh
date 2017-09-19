@@ -6,6 +6,7 @@ STACK_NAME='MugShot'
 BUCKET_NAME_TEMPLATE="mug-shot-template-s3"
 BUCKET_NAME_SUBMISSION="mug-shot-submission-s3"
 BUCKET_NAME_VALID="mug-shot-submission-s3"
+BUCKET_CODE="mug-shot-code-s3"
 
 # Check if the aws cli is installed
 if ! command -v aws > /dev/null; then
@@ -15,6 +16,13 @@ fi
 
 ACCOUNT_ID=`aws iam get-user | grep 'arn:aws:iam' | tr -dc '0-9'`
 REGION=`aws configure get region`
+
+# try to empty the bucket BUCKET_CODE
+if aws s3 rb s3://${BUCKET_CODE} --force; then
+    echo "Bucket s3://${BUCKET_CODE} emptied successfully"
+else
+    echo "Failed emptying bucket s3://${BUCKET_CODE}"
+fi
 
 # try to empty the bucket BUCKET_NAME_SUBMISSION
 if aws s3 rb s3://${BUCKET_NAME_SUBMISSION} --force; then
