@@ -17,6 +17,7 @@ fi
 # zip
 #zip ./lambda/src/deleteSubmittedFile/deleteSubmittedFile.zip ./lambda/src/deleteSubmittedFile/deleteSubmittedFile.py
 #zip ./lambda/src/extractAndValidateSubmittedFile/extractAndValidateSubmittedFile.zip ./lambda/src/extractAndValidateSubmittedFile/extractAndValidateSubmittedFile.py
+aws s3 cp ./lambda/src/copySubmittedFile/copySubmittedFile.zip  s3://${BUCKET_CODE}/copySubmittedFile.zip
 aws s3 cp ./lambda/src/deleteSubmittedFile/deleteSubmittedFile.zip  s3://${BUCKET_CODE}/deleteSubmittedFile.zip
 aws s3 cp ./lambda/src/extractAndValidateSubmittedFile/extractAndValidateSubmittedFile.zip  s3://${BUCKET_CODE}/extractAndValidateSubmittedFile.zip
 aws s3 cp ./lambda/src/launchSubmissionStateMachine/launchSubmissionStateMachine.zip  s3://${BUCKET_CODE}/launchSubmissionStateMachine.zip

@@ -1,6 +1,6 @@
 #
 # ---
-# Description: "Delete submitted file"
+# Description: "Copy submitted file"
 # MemorySize: 128
 # Timeout: 10
 # Policies:
@@ -12,6 +12,7 @@
 from __future__ import print_function  # Python 2/3 compatibility
 import boto3
 import logging
+import os
 
 # Constants
 
@@ -30,6 +31,8 @@ logger.setLevel(logging.DEBUG)
 def handler(event, context):
     logger.debug("Received event: " + str(event))
     client = boto3.client('s3')
-    client.delete_object(Bucket=event['bucket_name'], Key=event['file_name'])
+    client.copy_object(CopySource=event['bucket_name'] + '/' + event['file_name'],
+                       Bucket=os.environ.get("MUG_SHOT_BUCKET"), Key=event['file_name'])
+    return event
 
 # Tests

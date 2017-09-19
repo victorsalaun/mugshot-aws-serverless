@@ -128,6 +128,66 @@ Resources:
               Resource:
               - '*'
 
+  CopySubmittedFileFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Ref MugShotCodeBucketName
+        S3Key: copySubmittedFile.zip
+      Handler: copySubmittedFile.handler
+      Environment:
+        Variables:
+          MUG_SHOT_BUCKET: !Ref MugShotBucket
+      Role: !GetAtt CopySubmittedFileFunctionRole.Arn
+      Runtime: python3.6
+      MemorySize: 128
+      Timeout: 10
+
+  CopySubmittedFileFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+      - PolicyName: CopySubmittedFileFunctionLogPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:*
+            Resource:
+            - arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - logs:*
+            Resource:
+            - '*'
+      - PolicyName: CopySubmittedFileFunctionPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:GetObject
+            Resource:
+            - !GetAtt SubmissionMugShotBucket.Arn
+            - !Join [ "", [ !GetAtt SubmissionMugShotBucket.Arn, "/*" ] ]
+          - Effect: Allow
+            Action:
+            - s3:PutObject
+            Resource:
+            - !GetAtt MugShotBucket.Arn
+            - !Join [ "", [ !GetAtt MugShotBucket.Arn, "/*" ] ]
+
   DeleteSubmittedFileFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -192,6 +252,11 @@ Resources:
                 "ExtractAndValidateSubmittedFileFunction": {
                   "Type": "Task",
                   "Resource": "${ExtractAndValidateSubmittedFileFunctionArn}",
+                  "Next": "CopySubmittedFileFunction"
+                },
+                "CopySubmittedFileFunction": {
+                  "Type": "Task",
+                  "Resource": "${CopySubmittedFileFunctionArn}",
                   "Next": "DeleteSubmittedFileFunction"
                 },
                 "DeleteSubmittedFileFunction": {
@@ -203,6 +268,7 @@ Resources:
             }
           - {
               ExtractAndValidateSubmittedFileFunctionArn: !GetAtt ExtractAndValidateSubmittedFileFunction.Arn,
+              CopySubmittedFileFunctionArn: !GetAtt CopySubmittedFileFunction.Arn,
               DeleteSubmittedFileFunctionArn: !GetAtt DeleteSubmittedFileFunction.Arn
             }
       RoleArn: !GetAtt SubmissionStateMachineRole.Arn
