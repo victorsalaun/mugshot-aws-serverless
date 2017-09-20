@@ -21,6 +21,7 @@ aws s3 cp ./lambda/src/copySubmittedFile/copySubmittedFile.zip  s3://${BUCKET_CO
 aws s3 cp ./lambda/src/deleteSubmittedFile/deleteSubmittedFile.zip  s3://${BUCKET_CODE}/deleteSubmittedFile.zip
 aws s3 cp ./lambda/src/extractAndValidateSubmittedFile/extractAndValidateSubmittedFile.zip  s3://${BUCKET_CODE}/extractAndValidateSubmittedFile.zip
 aws s3 cp ./lambda/src/launchSubmissionStateMachine/launchSubmissionStateMachine.zip  s3://${BUCKET_CODE}/launchSubmissionStateMachine.zip
+aws s3 cp ./lambda/src/saveInTableSubmittedFileInfo/saveInTableSubmittedFileInfo.zip  s3://${BUCKET_CODE}/saveInTableSubmittedFileInfo.zip
 
 # Try to create CloudFormation package
 if aws cloudformation package --template-file cloudformation/${TEMPLATE_FILE_NAME} --output-template-file ${PACKAGE_FILE_NAME} --s3-bucket ${BUCKET_NAME_TEMPLATE}; then

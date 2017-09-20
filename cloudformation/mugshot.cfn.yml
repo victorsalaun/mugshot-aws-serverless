@@ -35,6 +35,19 @@ Resources:
     Properties:
       BucketName: !Ref MugShotBucketName
 
+  MugDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
   LaunchSubmissionStateMachineFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -188,6 +201,58 @@ Resources:
             - !GetAtt MugShotBucket.Arn
             - !Join [ "", [ !GetAtt MugShotBucket.Arn, "/*" ] ]
 
+  SaveInTableSubmittedFileInfoFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Ref MugShotCodeBucketName
+        S3Key: saveInTableSubmittedFileInfo.zip
+      Handler: saveInTableSubmittedFileInfo.handler
+      Environment:
+        Variables:
+          MUG_TABLE: !Ref MugDynamoDBTable
+      Role: !GetAtt SaveInTableSubmittedFileInfoFunctionRole.Arn
+      Runtime: python3.6
+      MemorySize: 128
+      Timeout: 10
+
+  SaveInTableSubmittedFileInfoFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+      - PolicyName: SaveInTableSubmittedFileInfoFunctionLogPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+              - logs:*
+              Resource:
+              - arn:aws:logs:*:*:*
+            - Effect: Allow
+              Action:
+              - logs:*
+              Resource:
+              - '*'
+      - PolicyName: SaveInTableSubmittedFileInfoFunctionPolicy
+        PolicyDocument:
+         Version: "2012-10-17"
+         Statement:
+           - Effect: Allow
+             Action:
+             - dynamodb:PutItem
+             Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref MugDynamoDBTable ] ]
+
   DeleteSubmittedFileFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -246,17 +311,38 @@ Resources:
         !Sub
           - |-
             {
-              "Comment": "A Hello World AWL example using an AWS Lambda function",
+              "Comment": "Extract Info from submitted file, save them while copying the file",
               "StartAt": "ExtractAndValidateSubmittedFileFunction",
               "States": {
                 "ExtractAndValidateSubmittedFileFunction": {
                   "Type": "Task",
                   "Resource": "${ExtractAndValidateSubmittedFileFunctionArn}",
-                  "Next": "CopySubmittedFileFunction"
+                  "Next": "SaveSubmittedFileInfo"
                 },
-                "CopySubmittedFileFunction": {
-                  "Type": "Task",
-                  "Resource": "${CopySubmittedFileFunctionArn}",
+                "SaveSubmittedFileInfo": {
+                  "Type": "Parallel",
+                  "Branches": [
+                    {
+                      "StartAt": "CopySubmittedFileFunction",
+                      "States": {
+                        "CopySubmittedFileFunction": {
+                          "Type": "Task",
+                          "Resource": "${CopySubmittedFileFunctionArn}",
+                          "End": true
+                        }
+                      }
+                    },
+                    {
+                      "StartAt": "SaveInTableSubmittedFileInfoFunction",
+                      "States": {
+                        "SaveInTableSubmittedFileInfoFunction": {
+                          "Type": "Task",
+                          "Resource": "${SaveInTableSubmittedFileInfoFunctionArn}",
+                          "End": true
+                        }
+                      }
+                    }
+                  ],
                   "Next": "DeleteSubmittedFileFunction"
                 },
                 "DeleteSubmittedFileFunction": {
@@ -269,6 +355,7 @@ Resources:
           - {
               ExtractAndValidateSubmittedFileFunctionArn: !GetAtt ExtractAndValidateSubmittedFileFunction.Arn,
               CopySubmittedFileFunctionArn: !GetAtt CopySubmittedFileFunction.Arn,
+              SaveInTableSubmittedFileInfoFunctionArn: !GetAtt SaveInTableSubmittedFileInfoFunction.Arn,
               DeleteSubmittedFileFunctionArn: !GetAtt DeleteSubmittedFileFunction.Arn
             }
       RoleArn: !GetAtt SubmissionStateMachineRole.Arn

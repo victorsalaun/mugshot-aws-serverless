@@ -28,8 +28,8 @@ logger.setLevel(logging.DEBUG)
 # Functions
 
 def handler(event, context):
-    logger.debug("Received event: " + str(event))
+    logger.debug("Received event: " + str(event[0]))
     client = boto3.client('s3')
-    client.delete_object(Bucket=event['bucket_name'], Key=event['file_name'])
+    client.delete_object(Bucket=event[0]['bucket_name'], Key=event[0]['file_name'])
 
 # Tests
