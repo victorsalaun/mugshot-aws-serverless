@@ -1,0 +1,27 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: Mug Shot Cognito
+
+Resources:
+  MugShotCognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: MugShotCognitoUserPool
+      AutoVerifiedAttributes:
+      - email
+      AliasAttributes:
+      - email
+      MfaConfiguration: "OFF"
+      Schema:
+      - Name: email
+        AttributeDataType: String
+        Mutable: false
+        Required: true
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: false
+          RequireNumbers: false
+          RequireSymbols: false
+          RequireUppercase: false
