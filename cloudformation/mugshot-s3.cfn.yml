@@ -1,0 +1,74 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: Mug Shot S3
+
+Parameters:
+  MugShotCodeBucketName:
+    Type: String
+    Description: The name for the bucket hosting validated mug shot
+    Default: mug-shot-code-s3
+
+  SubmissionMugShotBucketName:
+    Type: String
+    Description: The name for the bucket hosting submitted mug shot
+    Default: mug-shot-submission-s3
+
+  MugShotBucketName:
+    Type: String
+    Description: The name for the bucket hosting validated mug shot
+    Default: mug-shot-s3
+
+  MugShotStaticBucketName:
+    Type: String
+    Description: The name for the bucket hosting validated mug shot
+    Default: mug-shot-static-s3
+
+Resources:
+  MugShotCodeBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref MugShotCodeBucketName
+
+  SubmissionMugShotBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref SubmissionMugShotBucketName
+      # NotificationConfiguration:
+      #   LambdaConfigurations:
+      #     - Event: "s3:ObjectCreated:*"
+      #       Function:
+      #         Fn::Sub: ${TestFunction1.Arn}
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders: ['*']
+          AllowedMethods: ['POST', 'PUT']
+          AllowedOrigins: ['*']
+
+  MugShotBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref MugShotBucketName
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders: ['*']
+          AllowedMethods: ['GET']
+          AllowedOrigins: ['*']
+
+  MugShotBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: MugShotBucket
+      PolicyDocument:
+        Statement:
+        - Action:
+          - s3:GetObject
+          Effect: Allow
+          Resource: arn:aws:s3:::mug-shot-s3/*
+          Principal: "*"
+
+  MugShotStaticBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref MugShotStaticBucketName
