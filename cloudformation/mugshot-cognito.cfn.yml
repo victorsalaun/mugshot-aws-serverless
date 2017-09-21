@@ -25,3 +25,8 @@ Resources:
           RequireNumbers: false
           RequireSymbols: false
           RequireUppercase: false
+
+  MugShotCognitoIdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      AllowUnauthenticatedIdentities: true
