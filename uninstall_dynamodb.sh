@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-TEMPLATE_FILE_NAME='mugshot-cognito.cfn.yml'
-PACKAGE_FILE_NAME='mugshot-cognito-xfm.cfn.yml'
-STACK_NAME='mugshot-cognito'
+TEMPLATE_FILE_NAME='mugshot-dynamodb.cfn.yml'
+PACKAGE_FILE_NAME='mugshot-dynamodb-xfm.cfn.yml'
+STACK_NAME='mugshot-dynamodb'
 BUCKET_NAME_TEMPLATE="mug-shot-template-s3"
 
 
