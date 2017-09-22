@@ -30,3 +30,35 @@ Resources:
     Type: AWS::Cognito::IdentityPool
     Properties:
       AllowUnauthenticatedIdentities: true
+
+  MugShotCognitoIdentityPoolRole:
+    Type: AWS::IAM::Role
+    Properties:
+     AssumeRolePolicyDocument:
+       Version: "2012-10-17"
+       Statement:
+       - Effect: Allow
+         Action:
+         - sts:AssumeRoleWithWebIdentity
+         Condition: { "ForAnyValue:StringLike": {"cognito-identity.amazonaws.com:amr": "unauthenticated" },  "StringEquals": {"cognito-identity.amazonaws.com:aud": !Ref MugShotCognitoIdentityPool}}
+         Principal:
+           Federated:
+           - cognito-identity.amazonaws.com
+     Path: "/"
+     Policies:
+     - PolicyName: main
+       PolicyDocument:
+         Version: "2012-10-17"
+         Statement:
+         - Effect: Allow
+           Action:
+           - s3:*
+           - cognito-sync:*
+           - cognito-identity:*
+           Resource: "*"
+
+  IdentityPoolRoleAttachment:
+    Type: AWS::Cognito::IdentityPoolRoleAttachment
+    Properties:
+     IdentityPoolId: !Ref MugShotCognitoIdentityPool
+     Roles: {"unauthenticated": !GetAtt MugShotCognitoIdentityPoolRole.Arn}
