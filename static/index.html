@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.122.0.min.js"></script>
+    <script src="./app.js"></script>
+    <script>
+        function getHtml(template) {
+            return template.join('\n');
+        }
+        //listAlbums();
+        viewAlbum('/');
+        listMovies();
+    </script>
+</head>
+<body>
+<h1>Mug Shot</h1>
+<div id="app"></div>
+</body>
+</html>

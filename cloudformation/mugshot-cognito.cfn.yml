@@ -55,6 +55,7 @@ Resources:
            - s3:*
            - cognito-sync:*
            - cognito-identity:*
+           - dynamodb:*
            Resource: "*"
 
   IdentityPoolRoleAttachment:
