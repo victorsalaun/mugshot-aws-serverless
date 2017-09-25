@@ -1,19 +1,243 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html data-framework="vue">
 <head>
-    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.122.0.min.js"></script>
-    <script src="./app.js"></script>
-    <script>
-        function getHtml(template) {
-            return template.join('\n');
-        }
-        //listAlbums();
-        viewAlbum('/');
-        listMovies();
-    </script>
+    <meta charset="utf-8">
+    <title>Mug Shot</title>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+    <link rel='stylesheet' id='be-themes-layout-css' href='css/layout.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='be-pb-frontend-output-css' href='css/shortcodes.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='rs-plugin-settings-css' href='css/settings.css' type='text/css' media='all'/>
+
+    <link rel='stylesheet' id='be-themes-woocommerce-css-css' href='css/woocommerce.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='be-themes-bb-press-css-css' href='css/bb-press.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='be-style-css-css' href='css/style.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='be-themes-css-css' href='css/theme-options.css' type='text/css' media='all'/>
+    <link rel='stylesheet' href='css/icons.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='be-lightbox-css-css' href='css/magnific-popup.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='be-flexslider-css' href='css/flexslider.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='be-animations-css' href='css/animate-custom.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='be-slider-css' href='css/be-slider.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='ms-main-css' href='css/masterslider.main.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='ms-custom-css' href='css/custom.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='woocommerce_chosen_styles-css' href='css/chosen.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='woocommerce_chosen_styles-css2' href='css/prettyPhoto.css' type='text/css' media='all'/>
+    <link rel='stylesheet' id='be-themes-layout-group-css' href='css/font-awesome.css' type='text/css' media='all'/>
+
+    <link rel='stylesheet' id='redux-google-fonts-be_themes_data-css'
+          href='http://fonts.googleapis.com/css?family=Montserrat%3A700%2C400%7CCrimson+Text%3A400italic%7CRaleway%3A400%2C600%7CSource+Sans+Pro%3A400&#038;subset=latin&#038;ver=1428407938'
+          type='text/css' media='all'/>
+
 </head>
-<body>
-<h1>Mug Shot</h1>
-<div id="app"></div>
+<body class="home page page-id-2471 page-template-default _masterslider _msp_version_2.14.2 no-section-scroll no-smooth-scroll left-header left-static all-ajax-content be-themes-layout-layout-wide">
+<div class="mugsApp">
+    <div class="sb-slidebar sb-left">
+        <i class="overlay-menu-close font-icon icon-icon_close"></i>
+        <div class="display-table">
+            <div id="sb-slidebar-content" class="sb-slidebar-content ajaxable">
+                <div id="logo-sidebar">
+                    <a href="index.html"><img class="transparent-logo dark-scheme-logo"
+                                              src="upload/oshin-logo-black-green.png" alt=""/></a>
+                </div>
+                <div class="menu">
+                    <ul id="slidebar-menu" class="clearfix">
+                        <li id="menu-item-2562"
+                            class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-2471 current_page_item menu-item-2562">
+                            <a href="index.html">Work</a></li>
+                        <li id="menu-item-2700"
+                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2700"><a
+                                href="about.html">About</a></li>
+                        <li id="menu-item-2699"
+                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2699"><a
+                                href="blog-2.html">Journal</a></li>
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2789"><a
+                                href="contact.html">Contact</a></li>
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2789"><a
+                                href="single.html">Single Work</a></li>
+                        <li id="menu-item-2679"
+                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-2679">
+                            <a href="shop.html">Shop</a>
+                            <span class="mobile-sub-menu-controller"><i class="icon-icon_plus"></i></span>
+                            <ul class="sub-menu clearfix">
+                                <li id="menu-item-2691"
+                                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2691"><a
+                                        href="cart.html">Cart</a></li>
+                                <li id="menu-item-2690"
+                                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2690"><a
+                                        href="checkout.html">Checkout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="main-wrapper">
+        <div id="main" class="ajaxable layout-wide">
+            <!-- if ( isset($be_themes_data['opt-header-type']) && ('top' == $be_themes_data['opt-header-type'] ) ) { -->
+            <header id="header">
+                <div id="header-inner-wrap" class=" ">
+                    <div id="left-header-mobile" class="clearfix">
+                        <div class="logo">
+                            <a href="index.html"><img class="normal-logo" src="upload/oshin-logo-black-green.png"
+                                                      alt="Logo"/><img class="sticky-logo"
+                                                                       src="upload/oshin-logo-black-green.png"
+                                                                       alt="Logo"/></a>
+                        </div>
+                        <div class="header-cart-controls">
+                            <a class="cart-contents" href="cart.html" title="View your shopping cart">
+                                <i class="font-icon icon-icon_bag_alt"></i>
+                            </a>
+                            <div class="widget_shopping_cart_wrap">
+                                <div class="widget woocommerce widget_shopping_cart">
+                                    <h2 class="widgettitle">Cart</h2>
+                                    <div class="widget_shopping_cart_content"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mobile-nav-controller-wrap">
+                            <div class="menu-controls mobile-nav-controller" title="Mobile Menu Controller"><i
+                                    class="font-icon icon-list2"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix">
+                        <div class="mobile-menu">
+                            <ul id="mobile-menu" class="clearfix">
+                                <li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-2471 current_page_item menu-item-2562">
+                                    <a href="index.html">Work</a></li>
+                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2700"><a
+                                        href="about.html">About</a></li>
+                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2699"><a
+                                        href="blog-2.html">Journal</a></li>
+                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2789"><a
+                                        href="contact.html">Contact</a></li>
+                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2789"><a
+                                        href="single.html">Single Work</a></li>
+                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-2679">
+                                    <a href="shop.html">Shop</a>
+                                    <span class="mobile-sub-menu-controller"><i class="icon-icon_plus"></i></span>
+                                    <ul class="sub-menu clearfix">
+                                        <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2691">
+                                            <a href="cart.html">Cart</a></li>
+                                        <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2690">
+                                            <a href="checkout.html">Checkout</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- END HEADER -->
+
+            <div class="header-hero-section"></div>
+            <div id="content" class="no-sidebar-page" v-show="mugs && mugs.length > 0">
+                <div id="content-wrap" class="page-builder">
+                    <section id="page-content">
+                        <div class="clearfix">
+
+                            <div class="be-section clearfix" data-headerscheme="background--light" style="">
+                                <div class="be-section-pad clearfix" style="padding-top:40px;padding-bottom:0px;">
+                                    <div class="be-row ">
+                                        <div class="one-col column-block clearfix" data-animation="">
+                                            <div class="be-custom-column-inner">
+                                                <div class="portfolio-all-wrap">
+                                                    <div class="portfolio full-screen full-screen-gutter style1-gutter three-col"
+                                                         data-action="get_ajax_full_screen_gutter_portfolio"
+                                                         data-category="" data-masonry="0" data-showposts="-1"
+                                                         data-paged="2" data-col="three" data-gallery="0"
+                                                         data-filter="portfolio_categories" data-show_filters="no"
+                                                         data-thumbnail-bg-color="rgba(255,255,255,0.8)"
+                                                         data-thumbnail-bg-gradient="" data-title-style="style5"
+                                                         data-cat-color="#757575" data-title-color="#000000"
+                                                         data-title-animation-type="flipInY"
+                                                         data-cat-animation-type="flipInY" data-hover-style=""
+                                                         data-gutter-width="40" data-img-grayscale="c_to_c"
+                                                         data-image-effect="zoom-in" data-gradient-style-color=""
+                                                         data-cat-hide="0" style="margin-right: 40px;">
+                                                        <div class="portfolio-container clickable clearfix portfolio-shortcode init-slide-bottom"
+                                                             v-for="mug in mugs">
+
+                                                            <!-- Portfolio Item -->
+                                                            <div class="element be-hoverlay not-wide no-wide-width-height  c_to_c style5-title"
+                                                                 style="margin-bottom: 40px !important;">
+                                                                <div class="element-inner"
+                                                                     style="margin-left: 40px;">
+                                                                    <a href="https://s3.eu-central-1.amazonaws.com/mug-shot-s3/victor.salaun.png"
+                                                                       class="thumb-wrap"
+                                                                       title="preview">
+                                                                        <div class="flip-wrap">
+                                                                            <div class="flip-img-wrap zoom-in-effect">
+                                                                                <img
+                                                                                        src="https://s3.eu-central-1.amazonaws.com/mug-shot-s3/victor.salaun.png"
+                                                                                        alt/></div>
+                                                                        </div>
+                                                                        <div class="thumb-overlay">
+                                                                            <div class="thumb-bg"
+                                                                                 style="background-color:rgba(255,255,255,0.8); ">
+                                                                                <div class="thumb-title-wrap ">
+                                                                                    <div class="thumb-title be-animate animated "
+                                                                                         data-animation-type="flipInY"
+                                                                                         style="color: #000000; text-align: left;">
+                                                                                        Right Floating Sidebar
+                                                                                    </div>
+                                                                                    <div class="portfolio-item-cats be-animate animated "
+                                                                                         data-animation-type="flipInY"
+                                                                                         style="color: #757575; text-align: left;">
+                                                                                        <span>Photography</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a><a href="#"
+                                                                           class="custom-like-button no-liked"
+                                                                           data-post-id="2130"><i
+                                                                        class="font-icon icon-icon_heart"></i><span>19</span></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  End Page Content -->
+                    </section>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<a href="#" id="back-to-top" class="layout-wide"><i class="font-icon icon-arrow_carrot-up"></i></a>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.122.0.min.js"></script>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script src="js/app.js"></script>
+<script type='text/javascript' src='js/jquery.js'></script>
+<script type='text/javascript' src='js/jquery-migrate.min.js'></script>
+<script type='text/javascript' src='js/modernizr-2.6.2.min.js'></script>
+<script type='text/javascript' src='js/be-modules-plugin.js'></script>
+<script type='text/javascript' src='js/plugins.js'></script>
+<script type='text/javascript' src='js/script.js'></script>
+<script type='text/javascript' src='js/jquery.countdown.min.js'></script>
+<script type='text/javascript' src='js/be-modules-script.js'></script>
+<script type='text/javascript' src='js/frontend/add-to-cart.min.js'></script>
+<script type='text/javascript' src='js/jquery-blockui/jquery.blockUI.min.js'></script>
+<script type='text/javascript' src='js/frontend/woocommerce.min.js'></script>
+<script type='text/javascript' src='js/jquery-cookie/jquery.cookie.min.js'></script>
+<script type='text/javascript' src='js/frontend/cart-fragments.min.js'></script>
+<script type='text/javascript' src='js/woocommerce.js'></script>
+<script type='text/javascript' src='js/bb-press.js'></script>
+<script type='text/javascript' src='js/be-slider.js'></script>
+<script type='text/javascript' src='js/gmap3.min.js'></script>
+<script type='text/javascript' src='js/jquery-ui-1.8.22.custom.min.js'></script>
+<script type='text/javascript' src='js/masterslider.min.js'></script>
+<script type='text/javascript' src='js/jquery.easing.min.js'></script>
+<script type='text/javascript' src='js/chosen/chosen.jquery.min.js'></script>
 </body>
 </html>
