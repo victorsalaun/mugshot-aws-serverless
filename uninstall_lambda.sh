@@ -13,7 +13,7 @@ if ! command -v aws > /dev/null; then
 fi
 
 # try to empty the bucket BUCKET_CODE
-if aws s3 rb s3://${BUCKET_CODE} --force; then
+if aws s3 rb s3://${BUCKET_CODE}; then
     echo "Bucket s3://${BUCKET_CODE} emptied successfully"
 else
     echo "Failed emptying bucket s3://${BUCKET_CODE}"

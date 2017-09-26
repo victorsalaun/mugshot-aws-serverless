@@ -5,7 +5,7 @@
     const albumBucketName = 'mug-shot-s3';
     const submissionBucketName = 'mug-shot-submission-s3';
     const bucketRegion = 'eu-central-1';
-    const IdentityPoolId = 'REPLACE_ME';
+    const IdentityPoolId = 'eu-central-1:35302cfb-0108-4008-b586-435891ae6740';
 
     AWS.config.update({
         region: bucketRegion,
@@ -32,7 +32,8 @@
         el: '.mugsApp',
         // app initial state
         data: {
-            mugs: []
+            mugs: [],
+            showModal: false
         },
         methods: {
             getMugs: function () {
@@ -46,7 +47,16 @@
                     vm.mugs = data.Contents;
                 });
             },
-            addMug: function () {
+            addMug: function (file) {
+                submissionS3.upload({
+                    Key: file.name,
+                    Body: file,
+                    ACL: 'public-read'
+                }, function (err, data) {
+                    if (err) {
+                        return alert('There was an error uploading your photo: ' + err.message);
+                    }
+                });
             }
         },
         mounted: function () {
@@ -55,3 +65,36 @@
     });
 
 })(window);
+
+Vue.component('modal', {
+    template: '#modal-template',
+    props: ['show'],
+    methods: {
+        close: function () {
+            this.$emit('close');
+        }
+    }
+});
+
+Vue.component('NewPostModal', {
+    template: '#new-post-modal-template',
+    props: ['show'],
+    data: function () {
+        return {
+            title: '',
+            body: ''
+        };
+    },
+    methods: {
+        close: function () {
+            this.$emit('close');
+            this.title = '';
+            this.body = '';
+        },
+        savePost: function () {
+            // Some save logic goes here...
+            this.$parent.addMug(event.target.files[0]);
+            this.close();
+        }
+    }
+});

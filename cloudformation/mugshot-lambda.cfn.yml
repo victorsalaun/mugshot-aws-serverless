@@ -220,7 +220,7 @@ Resources:
            - Effect: Allow
              Action:
              - dynamodb:PutItem
-             Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref MugDynamoDBTable ] ]
+             Resource: "arn:aws:dynamodb:*:*:table/*"
 
   DeleteSubmittedFileFunction:
     Type: AWS::Lambda::Function
