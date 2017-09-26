@@ -1,58 +1,29 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
 
-Description: Mug Shot
+Description: Mug Shot Lambda
 
 Parameters:
-  MugShotCodeBucketName:
+  MugShotCodeBucket:
     Type: String
-    Description: The name for the bucket hosting validated mug shot
+    Description: The bucket hosting validated mug shot
     Default: mug-shot-code-s3
 
-  SubmissionMugShotBucketName:
-    Type: String
-    Description: The name for the bucket hosting submitted mug shot
-    Default: mug-shot-submission-s3
-
-  MugShotBucketName:
-    Type: String
-    Description: The name for the bucket hosting validated mug shot
-    Default: mug-shot-s3
-
-Resources:
-  SubmissionMugShotBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: mug-shot-submission-s3
-      # NotificationConfiguration:
-      #   LambdaConfigurations:
-      #     - Event: "s3:ObjectCreated:*"
-      #       Function:
-      #         Fn::Sub: ${TestFunction1.Arn}
-
   MugShotBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Ref MugShotBucketName
+    Type: String
+    Description: The bucket hosting validated mug shot
+    Default: arn:aws:s3:::mug-shot-s3
 
   MugDynamoDBTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      AttributeDefinitions:
-      - AttributeName: id
-        AttributeType: S
-      KeySchema:
-      - AttributeName: id
-        KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+    Type: String
+    Description: The table hosting mugs datas
 
+Resources:
   LaunchSubmissionStateMachineFunction:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: !Ref MugShotCodeBucketName
+        S3Bucket: !Ref MugShotCodeBucket
         S3Key: launchSubmissionStateMachine.zip
       Handler: launchSubmissionStateMachine.handler
       Environment:
@@ -98,13 +69,13 @@ Resources:
           - Effect: "Allow"
             Action:
             - "states:StartExecution"
-            Resource: "*"
+            Resource: !Ref SubmissionStateMachine
 
   ExtractAndValidateSubmittedFileFunction:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: !Ref MugShotCodeBucketName
+        S3Bucket: !Ref MugShotCodeBucket
         S3Key: extractAndValidateSubmittedFile.zip
       Handler: extractAndValidateSubmittedFile.handler
       Role: !GetAtt ExtractAndValidateSubmittedFileFunctionRole.Arn
@@ -145,7 +116,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: !Ref MugShotCodeBucketName
+        S3Bucket: !Ref MugShotCodeBucket
         S3Key: copySubmittedFile.zip
       Handler: copySubmittedFile.handler
       Environment:
@@ -192,20 +163,18 @@ Resources:
             Action:
             - s3:GetObject
             Resource:
-            - !GetAtt SubmissionMugShotBucket.Arn
-            - !Join [ "", [ !GetAtt SubmissionMugShotBucket.Arn, "/*" ] ]
+            - "*"
           - Effect: Allow
             Action:
             - s3:PutObject
             Resource:
-            - !GetAtt MugShotBucket.Arn
-            - !Join [ "", [ !GetAtt MugShotBucket.Arn, "/*" ] ]
+            - "*"
 
   SaveInTableSubmittedFileInfoFunction:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: !Ref MugShotCodeBucketName
+        S3Bucket: !Ref MugShotCodeBucket
         S3Key: saveInTableSubmittedFileInfo.zip
       Handler: saveInTableSubmittedFileInfo.handler
       Environment:
@@ -257,7 +226,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: !Ref MugShotCodeBucketName
+        S3Bucket: !Ref MugShotCodeBucket
         S3Key: deleteSubmittedFile.zip
       Handler: deleteSubmittedFile.handler
       Role: !GetAtt DeleteSubmittedFileFunctionRole.Arn
@@ -301,8 +270,7 @@ Resources:
              Action:
              - s3:DeleteObject
              Resource:
-             - !GetAtt SubmissionMugShotBucket.Arn
-             - !Join [ "", [ !GetAtt SubmissionMugShotBucket.Arn, "/*" ] ]
+             - '*'
 
   SubmissionStateMachine:
     Type: "AWS::StepFunctions::StateMachine"
@@ -380,10 +348,3 @@ Resources:
             Action:
             - "lambda:InvokeFunction"
             Resource: "*"
-
-Outputs:
-  SubmissionMugShotBucket:
-   Value: !GetAtt SubmissionMugShotBucket.Arn
-
-  MugShotBucket:
-    Value: !GetAtt MugShotBucket.Arn

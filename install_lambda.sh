@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-TEMPLATE_FILE_NAME='mugshot.cfn.yml'
-PACKAGE_FILE_NAME='mugshot-xfm.cfn.yml'
-STACK_NAME='MugShot'
+TEMPLATE_FILE_NAME='mugshot-lambda.cfn.yml'
+PACKAGE_FILE_NAME='mugshot-lambda-xfm.cfn.yml'
+STACK_NAME='mugshot-lambda'
 BUCKET_NAME_TEMPLATE="mug-shot-template-s3"
 BUCKET_CODE="mug-shot-code-s3"
 
