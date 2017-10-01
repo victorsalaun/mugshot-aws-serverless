@@ -17,6 +17,7 @@ Parameters:
   MugDynamoDBTable:
     Type: String
     Description: The table hosting mugs datas
+    Default: mugshot-dynamodb-MugDynamoDBTable-XXXXXXXXXXXXXXXXXXXXX
 
 Resources:
   LaunchSubmissionStateMachineFunction:

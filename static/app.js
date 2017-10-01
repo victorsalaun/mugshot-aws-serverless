@@ -5,7 +5,7 @@
     const albumBucketName = 'mug-shot-s3';
     const submissionBucketName = 'mug-shot-submission-s3';
     const bucketRegion = 'eu-central-1';
-    const IdentityPoolId = 'eu-central-1:35302cfb-0108-4008-b586-435891ae6740';
+    const IdentityPoolId = 'eu-central-1:XXXXXXXXXXXXXXXXXXXXXX';
 
     AWS.config.update({
         region: bucketRegion,
@@ -112,7 +112,7 @@ Vue.component('Item', {
                     "firstname",
                     "lastname"
                 ],
-                TableName: 'mugshot-dynamodb-MugDynamoDBTable-13HUH09L9J16T',
+                TableName: 'mugshot-dynamodb-MugDynamoDBTable-XXXXXXXXXXXXXXXXXX',
                 Key: {
                     "id": {
                         "S": keyParts[0]
