@@ -16,6 +16,10 @@ Open mugshot-lambda.cfn.yml file and replace MugDynamoDBTable's default name
     
     install_lambda.sh
 
+Edit add_event.sh and replace LambdaFunctionArn with LaunchSubmissionStateMachineFunction's Arn
+
+    add_event.sh
+
 Edit app.js file, replace IdentityPoolId with Cognito pool and TableName with MugDynamoDBTable's name
 
 ## Clean

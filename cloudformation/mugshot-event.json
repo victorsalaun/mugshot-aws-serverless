@@ -1,0 +1,10 @@
+{
+  "LambdaFunctionConfigurations": [
+    {
+      "LambdaFunctionArn": "arn:aws:lambda:eu-central-1:667791141321:function:mugshot-lambda-LaunchSubmissionStateMachineFunctio-XXXXXXXXXXXXXXXXX",
+      "Events": [
+        "s3:ObjectCreated:*"
+      ]
+    }
+  ]
+}
