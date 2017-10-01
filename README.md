@@ -22,6 +22,11 @@ Edit add_event.sh and replace LambdaFunctionArn with LaunchSubmissionStateMachin
 
 Edit app.js file, replace IdentityPoolId with Cognito pool and TableName with MugDynamoDBTable's name
 
+    cd static
+    npm install
+
+Open index.html file
+
 ## Clean
 
     uninstall_lambda.sh
