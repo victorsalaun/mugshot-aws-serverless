@@ -24,8 +24,10 @@ Edit app.js file, replace IdentityPoolId with Cognito pool and TableName with Mu
 
     cd static
     npm install
-
-Open index.html file
+    cd ..
+    push_static.sh
+    
+The website is available.
 
 ## Clean
 

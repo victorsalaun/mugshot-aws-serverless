@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 SUBMISSION_BUCKET_NAME="mug-shot-submission-s3"
-LAUNCH_STATE_MACHINE_FUNCTION="arn:aws:lambda:eu-central-1:667791141321:function:mugshot-lambda-LaunchSubmissionStateMachineFunctio-SB9JWL0KKYYP"
+LAUNCH_STATE_MACHINE_FUNCTION="arn:aws:lambda:eu-central-1:667791141321:function:mugshot-lambda-LaunchSubmissionStateMachineFunctio-XXXXXXXXXXXXXXX"
 
 # Check if the aws cli is installed
 if ! command -v aws > /dev/null; then

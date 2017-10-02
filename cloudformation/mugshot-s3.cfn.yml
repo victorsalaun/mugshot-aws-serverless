@@ -72,3 +72,19 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref MugShotStaticBucketName
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+  MugShotStaticBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref MugShotStaticBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action:
+              - s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${MugShotStaticBucket}/*"
